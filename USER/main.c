@@ -21,38 +21,37 @@ int main(void)
 	u8 t;
 	u8 len;	
 	u16 times=0;  
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//ÉèÖÃÏµÍ³ÖĞ¶ÏÓÅÏÈ¼¶·Ö×é2
-	delay_init(168);		//ÑÓÊ±³õÊ¼»¯ 
-	uart_init(115200);	//´®¿Ú³õÊ¼»¯²¨ÌØÂÊÎª115200
-	LED_Init();		  		//³õÊ¼»¯ÓëLEDÁ¬½ÓµÄÓ²¼ş½Ó¿Ú  
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	delay_init(168);	
+	uart_init(115200);	
+	LED_Init();		  	
 	LCD_Init();
 	POINT_COLOR=RED;
 	while(1)
 	{ 
 		if(USART_RX_STA&0x8000)
 		{					   
-			len=USART_RX_STA&0x3fff;//µÃµ½´Ë´Î½ÓÊÕµ½µÄÊı¾İ³¤¶È
-			printf("\r\nÄú·¢ËÍµÄÏûÏ¢Îª:\r\n");
+			len=USART_RX_STA&0x3fff;//å¾—åˆ°æ­¤æ¬¡æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦
+			printf("\r\nYour Message\r\n");
 			for(t=0;t<len;t++)
 			{
-				USART_SendData(USART1, USART_RX_BUF[t]);         //Ïò´®¿Ú1·¢ËÍÊı¾İ
+				USART_SendData(USART1, USART_RX_BUF[t]);         //å‘ä¸²å£1å‘é€æ•°æ®
 				
 				Paint();	
-				while(USART_GetFlagStatus(USART1,USART_FLAG_TC)!=SET);//µÈ´ı·¢ËÍ½áÊø
+				while(USART_GetFlagStatus(USART1,USART_FLAG_TC)!=SET);//ç­‰å¾…å‘é€ç»“æŸ
 			}
-			printf("size::::%d", sizeof(USART_RX_BUF));
-			printf("\r\n\r\n");//²åÈë»»ĞĞ
+			printf("size:%d", strlen(USART_RX_BUF));
+			printf("\r\n\r\n");//æ’å…¥æ¢è¡Œ
 			USART_RX_STA=0;
 		}else
 		{
 			times++;
 			if(times%5000==0)
 			{
-				printf("\r\nALIENTEK Ì½Ë÷ÕßSTM32F407¿ª·¢°å ´®¿ÚÊµÑé\r\n");
-				printf("ÕıµãÔ­×Ó@ALIENTEK\r\n\r\n\r\n");
+				printf("Hello\r\n\r\n\r\n");
 			}
-			if(times%200==0)printf("ÇëÊäÈëÊı¾İ,ÒÔ»Ø³µ¼ü½áÊø\r\n");  
-			if(times%30==0)LED0=!LED0;//ÉÁË¸LED,ÌáÊ¾ÏµÍ³ÕıÔÚÔËĞĞ.
+			if(times%200==0)printf("Please input data ending with Enter\r\n");  
+			if(times%30==0)LED0=!LED0;//é—ªçƒLED,æç¤ºç³»ç»Ÿæ­£åœ¨è¿è¡Œ.
 			delay_ms(10);   
 		}
 	}
